@@ -3,10 +3,13 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"       
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
-    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone">
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:test="clr-namespace:SharpZipLib.Silverlight.Tests_WindowsPhone7">
 
     <!--Application Resources-->
     <Application.Resources>
+        <test:TMP x:Key="typeNameConverter"/>
+        <test:TMP x:Key="fontWeightConverter"/>
     </Application.Resources>
 
     <Application.ApplicationLifetimeObjects>

@@ -12,9 +12,12 @@ using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Microsoft.Silverlight.Testing;
+using System.Windows.Data;
 
 namespace SharpZipLib.Silverlight.Tests_WindowsPhone7
 {
+    
+
     public partial class MainPage : PhoneApplicationPage
     {
         public MainPage()
