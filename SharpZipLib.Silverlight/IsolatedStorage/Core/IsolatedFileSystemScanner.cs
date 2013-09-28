@@ -108,7 +108,10 @@ namespace Salient.SharpZipLib.Core
         public void Scan(string directory, bool recurse)
         {
             alive_ = true;
-            ScanDir(directory, recurse);
+            using (var store = IsolatedStorageFile.GetUserStoreForApplication())
+            {
+                ScanDir(store, directory, recurse);
+            }
         }
 
         #endregion
@@ -202,12 +205,13 @@ namespace Salient.SharpZipLib.Core
             }
         }
 
-        private void ScanDir(string directory, bool recurse)
+        private void ScanDir(IsolatedStorageFile store, string directory, bool recurse)
         {
-            var store = IsolatedStorageFile.GetUserStoreForApplication();
+            
             try
             {
-                string[] names = store.GetFileNames(Path.Combine(directory, "*.*"));
+                string fileSearchPath = Path.Combine(directory, "*.*");
+                string[] names = store.GetFileNames(fileSearchPath);
 
                 bool hasMatch = false;
                 for (int fileIndex = 0; fileIndex < names.Length; ++fileIndex)
@@ -228,20 +232,18 @@ namespace Salient.SharpZipLib.Core
                 {
                     foreach (string fileName in names)
                     {
+                        var filePath = Path.Combine(directory, fileName);
                         try
-                        {
-                            if (fileName != null)
+                        {  
+                            OnProcessFile(filePath);
+                            if (!alive_)
                             {
-                                OnProcessFile(fileName);
-                                if (!alive_)
-                                {
-                                    break;
-                                }
+                                break;
                             }
                         }
                         catch (Exception e)
                         {
-                            if (!OnFileFailure(fileName, e))
+                            if (!OnFileFailure(filePath, e))
                             {
                                 throw;
                             }
@@ -263,11 +265,12 @@ namespace Salient.SharpZipLib.Core
                 {
                     string[] names = store.GetDirectoryNames(Path.Combine(directory, "*"));
 
-                    foreach (string fulldir in names)
+                    foreach (string subdir in names)
                     {
+                        var fulldir = Path.Combine(directory, subdir);
                         if ((directoryFilter_ == null) || (directoryFilter_.IsMatch(fulldir)))
                         {
-                            ScanDir(fulldir, true);
+                            ScanDir(store, fulldir, true);
                             if (!alive_)
                             {
                                 break;

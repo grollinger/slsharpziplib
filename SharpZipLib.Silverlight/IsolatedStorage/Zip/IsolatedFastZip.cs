@@ -399,10 +399,10 @@ namespace Salient.SharpZipLib.Zip
                 }
                 catch(Exception ex) {
                     if (events_ != null) {
-                        continueRunning_ = events_.OnFileFailure(e.Name, ex);
+                        e.ContinueRunning = continueRunning_ = events_.OnFileFailure(e.Name, ex);
                     }
                     else {
-                        continueRunning_ = false;
+                        e.ContinueRunning = continueRunning_ = false;
                         throw;
                     }
                 }
